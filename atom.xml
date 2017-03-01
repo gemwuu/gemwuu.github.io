@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gemwuu.github.io/"/>
-  <updated>2017-03-01T07:07:04.000Z</updated>
+  <updated>2017-03-01T09:20:00.000Z</updated>
   <id>http://gemwuu.github.io/</id>
   
   <author>
@@ -20,9 +20,9 @@
     <link href="http://gemwuu.github.io/2017/03/01/%E8%B7%A8%E5%9F%9F%E8%AF%B7%E6%B1%82%E9%9C%80%E8%A6%81%E9%AA%8C%E8%AF%81%E7%99%BB%E5%BD%95%E6%97%B6%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/"/>
     <id>http://gemwuu.github.io/2017/03/01/跨域请求需要验证登录时的注意事项/</id>
     <published>2017-03-01T04:04:14.000Z</published>
-    <updated>2017-03-01T07:07:04.000Z</updated>
+    <updated>2017-03-01T09:20:00.000Z</updated>
     
-    <content type="html"><![CDATA[<p>最近在本地调试 Web APP 的时候，遇到需要跨域登录的问题。假定服务器端的域名为 <code>test.com</code>，现在需要本地（<code>localhost:8080</code>）登录。登录成功之后，服务器端设置好 <code>test.com</code> 的 cookie，此时我需要跨域获取登录之后的一些数据，示例代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> ip = <span class="string">'test.com'</span></div><div class="line"></div><div class="line">axios.get(<span class="string">`<span class="subst">$&#123;ip&#125;</span>/getdata`</span>)</div><div class="line">  .then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</div><div class="line">    <span class="built_in">console</span>.log(res.data)</div><div class="line">  &#125;)</div><div class="line">  .catch(<span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</div><div class="line">    <span class="built_in">console</span>.log(err)</div><div class="line">  &#125;)</div></pre></td></tr></table></figure></p>
+    <content type="html"><![CDATA[<p>最近在本地调试 Web APP 的时候，遇到需要跨域登录验证的问题。<br><a id="more"></a><br>假定服务器端的域名为 <code>test.com</code>，现在需要本地（<code>localhost:8080</code>）登录。登录成功之后，服务器端设置好 <code>test.com</code> 的 cookie，此时我需要跨域获取登录之后的一些数据，示例代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> ip = <span class="string">'test.com'</span></div><div class="line"></div><div class="line">axios.get(<span class="string">`<span class="subst">$&#123;ip&#125;</span>/getdata`</span>)</div><div class="line">  .then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</div><div class="line">    <span class="built_in">console</span>.log(res.data)</div><div class="line">  &#125;)</div><div class="line">  .catch(<span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</div><div class="line">    <span class="built_in">console</span>.log(err)</div><div class="line">  &#125;)</div></pre></td></tr></table></figure></p>
 <p>此时服务器端会返回登录失败的错误信息。原因是上述跨域请求并没有附带 <code>test.com</code> 的 cookie，即使此时跨域请求的 header 里面已经设置了 <code>Access-Control-Allow-Origin</code> 为 <code>http://localhost:8080</code> 仍然失败。</p>
 <p>解决办法是在请求中设置 <code>withCredentials</code> 为 <code>true</code>，示例代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> ip = <span class="string">'test.com'</span></div><div class="line"></div><div class="line">axios.get(<span class="string">`<span class="subst">$&#123;ip&#125;</span>/getdata`</span>, &#123; <span class="attr">withCredentials</span>: <span class="literal">true</span> &#125;)</div><div class="line">  .then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</div><div class="line">    <span class="built_in">console</span>.log(res.data)</div><div class="line">  &#125;)</div><div class="line">  .catch(<span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</div><div class="line">    <span class="built_in">console</span>.log(err)</div><div class="line">  &#125;)</div></pre></td></tr></table></figure></p>
 <p>此时该请求仍然报错，需要在 header 中设置 <code>Access-Control-Allow-Credentials</code> 为 <code>true</code></p>
@@ -31,7 +31,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;最近在本地调试 Web APP 的时候，遇到需要跨域登录的问题。假定服务器端的域名为 &lt;code&gt;test.com&lt;/code&gt;，现在需要本地（&lt;code&gt;localhost:8080&lt;/code&gt;）登录。登录成功之后，服务器端设置好 &lt;code&gt;test.com&lt;/cod
+      &lt;p&gt;最近在本地调试 Web APP 的时候，遇到需要跨域登录验证的问题。&lt;br&gt;
     
     </summary>
     
