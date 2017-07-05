@@ -1,28 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-  <title>blog - Ke Wu</title>
-  
-  <link href="/atom.xml" rel="self"/>
-  
-  <link href="http://gemwuu.github.io/"/>
-  <updated>2017-07-05T07:43:15.000Z</updated>
-  <id>http://gemwuu.github.io/</id>
-  
-  <author>
-    <name>Ke Wu</name>
-    
-  </author>
-  
-  <generator uri="http://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>requestAnimationFrame 的用法</title>
-    <link href="http://gemwuu.github.io/2017/07/01/%E6%B5%85%E8%B0%88-requestAnimationFrame-%E7%9A%84%E7%94%A8%E6%B3%95/"/>
-    <id>http://gemwuu.github.io/2017/07/01/浅谈-requestAnimationFrame-的用法/</id>
-    <published>2017-07-01T03:23:10.000Z</published>
-    <updated>2017-07-05T07:43:15.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>最近需要实现一个数字变化的动画效果，研究了下 <code>requestAnimationFrame</code> 的用法。<br><a id="more"></a><br>动画的概念是，当我们把一定数量的、有细微差别的静态图片按照一定速率（通常为 16 张/秒）连续播放的时候，人的肉眼因视觉暂留，会认为这些图片中的动作是连续的。对应到前端开中，每一帧就是一张图片，那么我们只要精确控制每一帧的显示，就能形成一个完整的动画。</p>
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> requestAnimationFrame 的用法 · blog - Ke Wu</title><meta name="description" content="requestAnimationFrame 的用法 - Ke Wu"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon_new.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://gemwuu.github.io/atom.xml" title="blog - Ke Wu"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon_new.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="https://github.com/gemwuu" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">requestAnimationFrame 的用法</h1><div class="post-info">2017年7月1日</div><div class="post-content"><p>最近需要实现一个数字变化的动画效果，研究了下 <code>requestAnimationFrame</code> 的用法。<br><a id="more"></a><br>动画的概念是，当我们把一定数量的、有细微差别的静态图片按照一定速率（通常为 16 张/秒）连续播放的时候，人的肉眼因视觉暂留，会认为这些图片中的动作是连续的。对应到前端开中，每一帧就是一张图片，那么我们只要精确控制每一帧的显示，就能形成一个完整的动画。</p>
 <p>古老的做法是使用 <code>setInterval</code>，一个计数器的例子如下：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>计数器：<span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">'timer'</span>&gt;</span>0<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="xml"></span></div><div class="line">  const el = document.querySelector('#timer')</div><div class="line">  const num = 100</div><div class="line">  let time = 0</div><div class="line"></div><div class="line">  function animate(ts) &#123;</div><div class="line">    if (time <span class="tag">&lt; <span class="attr">num</span>) &#123;</span></div><div class="line">      <span class="attr">time</span>++</div><div class="line">      <span class="attr">el.innerText</span> = <span class="string">time</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="attr">setInterval</span>(<span class="attr">animate</span>, <span class="attr">16</span>)</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure></p>
 <p>改成 <code>requestAnimationFrame</code> 的方式来实现如下：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>计数器：<span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">'timer'</span>&gt;</span>0<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="xml"></span></div><div class="line">  const el = document.querySelector('#timer')</div><div class="line">  const num = 100</div><div class="line">  let time = 0</div><div class="line"></div><div class="line">  function animate(ts) &#123;</div><div class="line">    if (time <span class="tag">&lt; <span class="attr">num</span>) &#123;</span></div><div class="line">      <span class="attr">time</span>++</div><div class="line">      <span class="attr">el.innerText</span> = <span class="string">time</span></div><div class="line">      <span class="attr">requestAnimationFrame</span>(<span class="attr">animate</span>)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="attr">requestAnimationFrame</span>(<span class="attr">animate</span>)</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
@@ -36,42 +12,4 @@
 <p><img src="./浅谈-requestAnimationFrame-的用法/WechatIMG7.jpeg" alt="WechatIMG7.jpeg"></p>
 <p>每两个时间的差大约为 <code>16.67ms</code>，这其实对应了当前显示器的刷新间隔，测试显示器的刷新频率为 <code>60Hz</code>。基于上述几点，我只要控制每次调用 <code>requestAnimationFrame</code>的时间就好了，例如代码里面的 <code>speed = 1000 / 30</code>。但是，<code>speed</code> 本身也不能小于当前显示器的刷新间隔（本例中的 <code>1000 / 60 = 16.67</code>）。如果我要实现一个计时器，只需要 <code>speed = 1000</code>即可。</p>
 <p>参考文章：<br><a href="https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame" target="_blank" rel="external">window.requestAnimationFrame()</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;最近需要实现一个数字变化的动画效果，研究了下 &lt;code&gt;requestAnimationFrame&lt;/code&gt; 的用法。&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="requestAnimationFrame, 动画优化" scheme="http://gemwuu.github.io/tags/requestAnimationFrame-%E5%8A%A8%E7%94%BB%E4%BC%98%E5%8C%96/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>跨域请求需要验证登录时的注意事项</title>
-    <link href="http://gemwuu.github.io/2017/06/23/%E8%B7%A8%E5%9F%9F%E8%AF%B7%E6%B1%82%E9%9C%80%E8%A6%81%E9%AA%8C%E8%AF%81%E7%99%BB%E5%BD%95%E6%97%B6%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/"/>
-    <id>http://gemwuu.github.io/2017/06/23/跨域请求需要验证登录时的注意事项/</id>
-    <published>2017-06-23T09:49:30.000Z</published>
-    <updated>2017-07-05T07:40:32.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>最近在本地调试 Web APP 的时候，遇到需要跨域登录验证的问题。<br><a id="more"></a><br>假定服务器端的域名为 <code>test.com</code>，现在需要本地（<code>localhost:8080</code>）登录。登录成功之后，服务器端设置好 <code>test.com</code> 的 cookie，此时我需要跨域获取登录之后的一些数据，示例代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> ip = <span class="string">'test.com'</span></div><div class="line"></div><div class="line">axios.get(<span class="string">`<span class="subst">$&#123;ip&#125;</span>/getdata`</span>)</div><div class="line">  .then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</div><div class="line">    <span class="built_in">console</span>.log(res.data)</div><div class="line">  &#125;)</div><div class="line">  .catch(<span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</div><div class="line">    <span class="built_in">console</span>.log(err)</div><div class="line">  &#125;)</div></pre></td></tr></table></figure></p>
-<p>此时服务器端会返回登录失败的错误信息。原因是上述跨域请求并没有附带 <code>test.com</code> 的 cookie，即使此时跨域请求的 header 里面已经设置了 <code>Access-Control-Allow-Origin</code> 为 <code>http://localhost:8080</code> 仍然失败。</p>
-<p>解决办法是在请求中设置 <code>withCredentials</code> 为 <code>true</code>，示例代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> ip = <span class="string">'test.com'</span></div><div class="line">axios.get(<span class="string">`<span class="subst">$&#123;ip&#125;</span>/getdata`</span>, &#123; <span class="attr">withCredentials</span>: <span class="literal">true</span> &#125;)</div><div class="line">  .then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</div><div class="line">    <span class="built_in">console</span>.log(res.data)</div><div class="line">  &#125;)</div><div class="line">  .catch(<span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</div><div class="line">    <span class="built_in">console</span>.log(err)</div><div class="line">  &#125;)</div></pre></td></tr></table></figure></p>
-<p>此时该请求仍然报错，需要在 header 中设置 <code>Access-Control-Allow-Credentials</code> 为 <code>true</code>。</p>
-<p><strong>参考文章：</strong><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/XMLHttpRequest/withCredentials" target="_blank" rel="external">XMLHttpRequest.withCredentials</a><br><a href="https://hacks.mozilla.org/2009/07/cross-site-xmlhttprequest-with-cors/" target="_blank" rel="external">cross-site xmlhttprequest with CORS</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;最近在本地调试 Web APP 的时候，遇到需要跨域登录验证的问题。&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="CORS, HTTP" scheme="http://gemwuu.github.io/tags/CORS-HTTP/"/>
-    
-  </entry>
-  
-</feed>
+</div></article></div></main><footer><div class="paginator"><a href="/2017/06/23/跨域请求需要验证登录时的注意事项/" class="next">下一篇</a></div><div class="copyright"><p>© 2017 <a href="http://gemwuu.github.io">Ke Wu</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>
