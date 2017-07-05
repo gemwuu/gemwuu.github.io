@@ -1,0 +1,68 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> CSS 选择器优先级判定方法 · blog - Ke Wu</title><meta name="description" content="CSS 选择器优先级判定方法 - Ke Wu"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon_new.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://gemwuu.github.io/atom.xml" title="blog - Ke Wu"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon_new.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="https://github.com/gemwuu" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">CSS 选择器优先级判定方法</h1><div class="post-info">2017年7月5日</div><div class="post-content"><p>总结下 CSS 选择器，以及选择器之间优先级的判定方法。<br><a id="more"></a></p>
+<p><strong>选择器</strong></p>
+<ol>
+<li><p>基本选择器</p>
+<ol>
+<li><p>元素类型选择器</p>
+<p>例如，<code>input</code> 选中文档中所有的 <code>&lt;input&gt;</code>；<code>img</code> 选中文档中所有的 <code>&lt;img&gt;</code>。</p>
+</li>
+<li><p>类选择器</p>
+<p>例如，<code>.container</code> 选中文档中所有 <code>class=&#39;container&#39;</code> 的元素。</p>
+</li>
+<li><p>id 选择器</p>
+<p>例如，<code>#username</code> 选中文档中 <code>id=&#39;username&#39;</code> 的元素。一般来讲出了用于锚定位，不推荐使用 id 选择器。</p>
+<p>在 Chrome 59 中，如果文档中有多个 id 相同的元素，CSS 定义会在所有元素中生效。但是 javascipt 中获取 dom 的接口默认获取第一个 id 元素。</p>
+</li>
+<li><p>通配选择器</p>
+<p>例如，<code>*</code>选中文档中所有元素。</p>
+</li>
+<li><p>属性选择器</p>
+<p>例如，E[attr]，选中包含 <code>attr</code> 属性的元素 E；</p>
+<p>E[attr=value]，选中包含 <code>attr</code> 且 <code>attr=value</code> (value 为字符串，下同) 属性的元素 E；</p>
+<p>E[attr|=value]，选中包含 <code>attr</code> 且 <code>attr=value</code> 或 <code>attr</code> 为 <code>&quot;value&quot;</code> 开头的属性的元素 E；</p>
+<p>E[attr~=value]，选中包含 <code>attr</code> 且 <code>attr</code> 为包含 <code>&quot; value &quot;</code>  的属性的元素 E；</p>
+<p>E[attr^=value]，选中包含 <code>attr</code> 且 <code>attr</code> 为以 <code>&quot;value&quot;</code> 开头的属性的元素 E；</p>
+<p>E[attr*=value]，选中包含 <code>attr</code> 且 <code>attr</code> 任意位置包含 <code>&quot;value&quot;</code> 的属性的元素 E；</p>
+<p>E[attr$=value]，选中包含 <code>attr</code> 且 <code>attr</code> 结尾包含 <code>&quot;value&quot;</code> 的属性的元素 E。</p>
+</li>
+</ol>
+</li>
+<li><p>组合选择器</p>
+<ol>
+<li><p>子选择器</p>
+<p>例如，E &gt; C，选中所有被元素 E 直接包含的元素 C。</p>
+</li>
+<li><p>后代选择器</p>
+<p>例如，E C，选中所有被元素 E 中的元素 C。</p>
+</li>
+<li><p>相邻兄弟选择器</p>
+<p>例如，E + C，选中 E 后面紧接的一个兄弟元素 C。</p>
+</li>
+<li><p>通用兄弟选择器</p>
+<p>例如，E ~ C，选中元素 E 后面的所有兄弟元素 C。</p>
+</li>
+</ol>
+</li>
+<li><p>伪类选择器</p>
+<p>详见 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes" target="_blank" rel="external">link</a></p>
+</li>
+<li><p>伪元素选择器</p>
+<p>详见 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-elements" target="_blank" rel="external">link</a></p>
+</li>
+</ol>
+<p><strong>选择器的优先级判断</strong></p>
+<ol>
+<li><p><code>!important</code> 的权重最高，当出现多个 <code>!important</code> 时，<code>!important</code> 的作用抵消，按照原有优先级生效。</p>
+</li>
+<li><p>其他样式遵循：<strong>内联样式（s） &gt; id 选择器数量（a） &gt; 类、伪类和属性选择器数量（b）&gt; 类选择器和伪元素选择器（c）</strong>。</p>
+<p>每个统计出来之后按照 [s, a, b, c] 分别比较，<strong>每位统计数字不进位</strong>。</p>
+<p>例如 [1, 0, 0, 0] &gt; [0, 11, 0, 0]，[1, 1, 0, 0] &gt; [1, 0, 10, 11] </p>
+</li>
+</ol>
+<p><strong>参考文章：</strong><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Selectors" target="_blank" rel="external">CSS_Selectors</a></p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes" target="_blank" rel="external">Pseudo-classes</a></p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-elements" target="_blank" rel="external">Pseudo-elements</a></p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/Specificity" target="_blank" rel="external">Specificity</a></p>
+<p><a href="https://book.douban.com/subject/25920727/" target="_blank" rel="external">《图解 CSS3：核心技术与案例实践》（大漠 著）</a></p>
+<p><a href="http://chenhaizhou.github.io/2015/01/16/css-weight.html" target="_blank" rel="external">关于CSS权重(优先级)的理解</a></p>
+</div></article></div></main><footer><div class="paginator"><a href="/2017/07/01/浅谈-requestAnimationFrame-的用法/" class="next">下一篇</a></div><div class="copyright"><p>© 2017 <a href="http://gemwuu.github.io">Ke Wu</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gemwuu.github.io/"/>
-  <updated>2017-07-05T07:59:59.000Z</updated>
+  <updated>2017-07-05T10:34:52.000Z</updated>
   <id>http://gemwuu.github.io/</id>
   
   <author>
@@ -16,11 +16,98 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>CSS 选择器优先级判定方法</title>
+    <link href="http://gemwuu.github.io/2017/07/05/CSS-%E9%80%89%E6%8B%A9%E5%99%A8%E4%BC%98%E5%85%88%E7%BA%A7%E5%88%A4%E5%AE%9A%E6%96%B9%E6%B3%95/"/>
+    <id>http://gemwuu.github.io/2017/07/05/CSS-选择器优先级判定方法/</id>
+    <published>2017-07-05T08:07:01.000Z</published>
+    <updated>2017-07-05T10:34:52.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>总结下 CSS 选择器，以及选择器之间优先级的判定方法。<br><a id="more"></a></p>
+<p><strong>选择器</strong></p>
+<ol>
+<li><p>基本选择器</p>
+<ol>
+<li><p>元素类型选择器</p>
+<p>例如，<code>input</code> 选中文档中所有的 <code>&lt;input&gt;</code>；<code>img</code> 选中文档中所有的 <code>&lt;img&gt;</code>。</p>
+</li>
+<li><p>类选择器</p>
+<p>例如，<code>.container</code> 选中文档中所有 <code>class=&#39;container&#39;</code> 的元素。</p>
+</li>
+<li><p>id 选择器</p>
+<p>例如，<code>#username</code> 选中文档中 <code>id=&#39;username&#39;</code> 的元素。一般来讲出了用于锚定位，不推荐使用 id 选择器。</p>
+<p>在 Chrome 59 中，如果文档中有多个 id 相同的元素，CSS 定义会在所有元素中生效。但是 javascipt 中获取 dom 的接口默认获取第一个 id 元素。</p>
+</li>
+<li><p>通配选择器</p>
+<p>例如，<code>*</code>选中文档中所有元素。</p>
+</li>
+<li><p>属性选择器</p>
+<p>例如，E[attr]，选中包含 <code>attr</code> 属性的元素 E；</p>
+<p>E[attr=value]，选中包含 <code>attr</code> 且 <code>attr=value</code> (value 为字符串，下同) 属性的元素 E；</p>
+<p>E[attr|=value]，选中包含 <code>attr</code> 且 <code>attr=value</code> 或 <code>attr</code> 为 <code>&quot;value&quot;</code> 开头的属性的元素 E；</p>
+<p>E[attr~=value]，选中包含 <code>attr</code> 且 <code>attr</code> 为包含 <code>&quot; value &quot;</code>  的属性的元素 E；</p>
+<p>E[attr^=value]，选中包含 <code>attr</code> 且 <code>attr</code> 为以 <code>&quot;value&quot;</code> 开头的属性的元素 E；</p>
+<p>E[attr*=value]，选中包含 <code>attr</code> 且 <code>attr</code> 任意位置包含 <code>&quot;value&quot;</code> 的属性的元素 E；</p>
+<p>E[attr$=value]，选中包含 <code>attr</code> 且 <code>attr</code> 结尾包含 <code>&quot;value&quot;</code> 的属性的元素 E。</p>
+</li>
+</ol>
+</li>
+<li><p>组合选择器</p>
+<ol>
+<li><p>子选择器</p>
+<p>例如，E &gt; C，选中所有被元素 E 直接包含的元素 C。</p>
+</li>
+<li><p>后代选择器</p>
+<p>例如，E C，选中所有被元素 E 中的元素 C。</p>
+</li>
+<li><p>相邻兄弟选择器</p>
+<p>例如，E + C，选中 E 后面紧接的一个兄弟元素 C。</p>
+</li>
+<li><p>通用兄弟选择器</p>
+<p>例如，E ~ C，选中元素 E 后面的所有兄弟元素 C。</p>
+</li>
+</ol>
+</li>
+<li><p>伪类选择器</p>
+<p>详见 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes" target="_blank" rel="external">link</a></p>
+</li>
+<li><p>伪元素选择器</p>
+<p>详见 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-elements" target="_blank" rel="external">link</a></p>
+</li>
+</ol>
+<p><strong>选择器的优先级判断</strong></p>
+<ol>
+<li><p><code>!important</code> 的权重最高，当出现多个 <code>!important</code> 时，<code>!important</code> 的作用抵消，按照原有优先级生效。</p>
+</li>
+<li><p>其他样式遵循：<strong>内联样式（s） &gt; id 选择器数量（a） &gt; 类、伪类和属性选择器数量（b）&gt; 类选择器和伪元素选择器（c）</strong>。</p>
+<p>每个统计出来之后按照 [s, a, b, c] 分别比较，<strong>每位统计数字不进位</strong>。</p>
+<p>例如 [1, 0, 0, 0] &gt; [0, 11, 0, 0]，[1, 1, 0, 0] &gt; [1, 0, 10, 11] </p>
+</li>
+</ol>
+<p><strong>参考文章：</strong><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Selectors" target="_blank" rel="external">CSS_Selectors</a></p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes" target="_blank" rel="external">Pseudo-classes</a></p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-elements" target="_blank" rel="external">Pseudo-elements</a></p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/Specificity" target="_blank" rel="external">Specificity</a></p>
+<p><a href="https://book.douban.com/subject/25920727/" target="_blank" rel="external">《图解 CSS3：核心技术与案例实践》（大漠 著）</a></p>
+<p><a href="http://chenhaizhou.github.io/2015/01/16/css-weight.html" target="_blank" rel="external">关于CSS权重(优先级)的理解</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;总结下 CSS 选择器，以及选择器之间优先级的判定方法。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="CSS, selector" scheme="http://gemwuu.github.io/tags/CSS-selector/"/>
+    
+  </entry>
+  
+  <entry>
     <title>浅谈 requestAnimationFrame 的用法</title>
     <link href="http://gemwuu.github.io/2017/07/01/%E6%B5%85%E8%B0%88-requestAnimationFrame-%E7%9A%84%E7%94%A8%E6%B3%95/"/>
     <id>http://gemwuu.github.io/2017/07/01/浅谈-requestAnimationFrame-的用法/</id>
     <published>2017-07-01T03:23:10.000Z</published>
-    <updated>2017-07-05T07:59:59.000Z</updated>
+    <updated>2017-07-05T08:05:16.000Z</updated>
     
     <content type="html"><![CDATA[<p>最近需要实现一个数字变化的动画效果，研究了下 <code>requestAnimationFrame</code> 的用法。<br><a id="more"></a><br>动画的概念是，当我们把一定数量的、有细微差别的静态图片按照一定速率（通常为 16 张/秒）连续播放的时候，人的肉眼因视觉暂留，会认为这些图片中的动作是连续的。对应到前端开中，每一帧就是一张图片，那么我们只要精确控制每一帧的显示，就能形成一个完整的动画。</p>
 <p>古老的做法是使用 <code>setInterval</code>，一个计数器的例子如下：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>计数器：<span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">'timer'</span>&gt;</span>0<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="xml"></span></div><div class="line">  const el = document.querySelector('#timer')</div><div class="line">  const num = 100</div><div class="line">  let time = 0</div><div class="line"></div><div class="line">  function animate(ts) &#123;</div><div class="line">    if (time <span class="tag">&lt; <span class="attr">num</span>) &#123;</span></div><div class="line">      <span class="attr">time</span>++</div><div class="line">      <span class="attr">el.innerText</span> = <span class="string">time</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="attr">setInterval</span>(<span class="attr">animate</span>, <span class="attr">16</span>)</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure></p>
