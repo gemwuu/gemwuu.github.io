@@ -15,7 +15,7 @@
 <p><img src="./WechatIMG11.jpeg" alt="image1"></p>
 <p><img src="./WechatIMG12.jpeg" alt="image2"></p>
 <p>原因在于由于当前 viewport 的宽度导致中间的文字换行，所以第一张图中的内联元素 <code>span[id=aaa]</code> 多出一项。</p>
-<p>既然可以拿到元素 E 相对于viewport 的位置，进而得出在文档中的位置，那么是否可以拿到文档中特定位置的元素集合呢？这就要用到另外一个 API <code>elementsFromPoint</code> 和 <code>elementFromPoint</code>。</p>
+<p>既然可以拿到元素 E 相对于viewport 的位置，进而得出在文档中的位置，那么是否可以拿到文档中特定位置的元素集合呢？这就要用到另外一个 API <code>document.elementsFromPoint(left, top)</code> 和 <code>document.elementFromPoint(left, top)</code>。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 仍然使用上一份代码中的 HTML 结构</span></div><div class="line"><span class="keyword">const</span> doc = <span class="built_in">document</span></div><div class="line"><span class="keyword">const</span> els = doc.elementsFromPoint(<span class="number">8</span>, <span class="number">12</span>)</div><div class="line"><span class="keyword">const</span> el = doc.elementFromPoint(<span class="number">8</span>, <span class="number">12</span>)</div></pre></td></tr></table></figure>
 <p>上述代码可以得到一下数据</p>
 <p><img src="./WechatIMG13.jpeg" alt="image3"></p>
