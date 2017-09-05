@@ -54,7 +54,7 @@
 <ol>
 <li><p><code>!important</code> 的权重最高，当出现多个 <code>!important</code> 时，<code>!important</code> 的作用抵消，按照原有优先级生效。</p>
 </li>
-<li><p>其他样式遵循：<strong>内联样式（s） &gt; id 选择器数量（a） &gt; 类、伪类和属性选择器数量（b）&gt; 类选择器和伪元素选择器数量（c）</strong>。</p>
+<li><p>其他样式遵循：<strong>内联样式（s） &gt; id 选择器数量（a） &gt; 类、伪类和属性选择器数量（b）&gt; 标签选择器和伪元素选择器数量（c）</strong>。</p>
 <p>每个统计出来之后按照 [s, a, b, c] 分别比较，<strong>每位统计数字不进位</strong>。</p>
 <p>例如 [1, 0, 0, 0] &gt; [0, 11, 0, 0]，[1, 1, 0, 0] &gt; [1, 0, 10, 11] </p>
 </li>
